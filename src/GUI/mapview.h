@@ -130,6 +130,7 @@ public slots:
 	void showMotionInfo(bool show);
 	void showLegend(bool show);
 	void useStyles(bool use);
+	void showDirectionArrows(bool show);
 	void drawHillShading(bool draw);
 
 private slots:

@@ -25,7 +25,7 @@ public:
 	virtual ~PathItem() {}
 
 	QPainterPath shape() const {return _shape;}
-	QRectF boundingRect() const {return _shape.boundingRect();}
+	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 	  QWidget *widget);
 
@@ -62,6 +62,7 @@ public:
 
 	static void setUnits(Units units) {_units = units;}
 	static void setTimeZone(const QTimeZone &zone) {_timeZone = zone;}
+	static void showDirectionArrows(bool show) {_showArrows = show;}
 
 public slots:
 	void hover(bool hvr);
@@ -101,6 +102,10 @@ private:
 	unsigned tickSize() const;
 
 	static qreal xInM();
+	void drawArrows(QPainter *painter, const QRectF &exposed) const;
+	qreal arrowScale() const;
+
+	static bool _showArrows;
 
 	Path _path;
 
@@ -126,6 +131,7 @@ private:
 	MarkerInfoItem::Type _markerInfoType;
 	qreal _markerDistance;
 	int _digitalZoom;
+	int _hoverCount;
 };
 
 #endif // PATHITEM_H

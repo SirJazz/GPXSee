@@ -1,5 +1,6 @@
 #include <cmath>
 #include <QPainter>
+#include <QStyleOptionGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
 #include "common/greatcircle.h"
 #include "map/map.h"
@@ -16,6 +17,12 @@
 #define VIDEO_OFFSET QPoint(6, -12)
 
 Units PathItem::_units = Metric;
+bool PathItem::_showArrows = false;
+
+#define ARROW_SPACING 170.0
+#define ARROW_LENGTH  20.0
+#define ARROW_WIDTH   15.0
+#define ARROW_MARGIN  (ARROW_LENGTH + 2.0)
 QTimeZone PathItem::_timeZone = QTimeZone::utc();
 
 static inline bool isValid(const QPointF &p)
@@ -34,6 +41,8 @@ PathItem::PathItem(const Path &path, Map *map, QGraphicsItem *parent)
 	Q_ASSERT(_path.isValid());
 
 	_digitalZoom = 0;
+	_hoverCount = 0;
+	setFlag(QGraphicsItem::ItemUsesExtendedStyleOption);
 	_width = 3;
 	_color = Qt::black;
 	_penStyle = Qt::SolidLine;
@@ -143,10 +152,70 @@ void PathItem::updatePainterPath()
 	}
 }
 
+QRectF PathItem::boundingRect() const
+{
+	qreal m = ARROW_MARGIN * arrowScale();
+	return _shape.boundingRect().adjusted(-m, -m, m, m);
+}
+
+qreal PathItem::arrowScale() const
+{
+	return pow(2, -_digitalZoom);
+}
+
+/* Garmin/BaseCamp like direction arrows placed in regular screen distances
+   along the path. */
+void PathItem::drawArrows(QPainter *painter, const QRectF &exposed) const
+{
+	qreal scale = arrowScale();
+	qreal spacing = ARROW_SPACING * scale;
+	qreal len = ARROW_LENGTH * scale;
+	qreal hw = (ARROW_WIDTH / 2.0) * scale;
+	QRectF clip(exposed.adjusted(-len, -len, len, len));
+
+	QPolygonF arrow;
+	arrow << QPointF(0, 0) << QPointF(-len, -hw) << QPointF(-len * 0.7, 0)
+	  << QPointF(-len, hw);
+
+	painter->save();
+	painter->setRenderHint(QPainter::Antialiasing, true);
+	painter->setPen(QPen(QColor(255, 255, 255, 230), 1.2 * scale));
+	painter->setBrush(QColor(0xd4, 0x10, 0x10));
+
+	qreal next = spacing / 2.0, acc = 0;
+	QPointF prev;
+	for (int i = 0; i < _painterPath.elementCount(); i++) {
+		const QPainterPath::Element &e = _painterPath.elementAt(i);
+		QPointF p(e.x, e.y);
+		if (e.isMoveTo()) {
+			prev = p;
+			continue;
+		}
+		QLineF line(prev, p);
+		qreal l = line.length();
+		if (l > 0) {
+			while (next <= acc + l) {
+				QPointF pos(line.pointAt((next - acc) / l));
+				if (clip.contains(pos)) {
+					painter->save();
+					painter->translate(pos);
+					painter->rotate(-line.angle());
+					painter->drawPolygon(arrow);
+					painter->restore();
+				}
+				next += spacing;
+			}
+			acc += l;
+		}
+		prev = p;
+	}
+
+	painter->restore();
+}
+
 void PathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
   QWidget *widget)
 {
-	Q_UNUSED(option);
 	Q_UNUSED(widget);
 
 	if (_showPoints) {
@@ -164,6 +233,9 @@ void PathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 		painter->setPen(_pen);
 		painter->drawPath(_painterPath);
 	}
+
+	if (_showArrows || _hoverCount > 0)
+		drawArrows(painter, option ? option->exposedRect : boundingRect());
 
 /*
 	painter->setPen(Qt::red);
@@ -421,6 +493,8 @@ void PathItem::drawMarkerBackground(bool draw)
 
 void PathItem::hover(bool hvr)
 {
+	_hoverCount = qMax(0, _hoverCount + (hvr ? 1 : -1));
+
 	if (hvr) {
 		_pen.setWidth((width() + 1) * pow(2, -_digitalZoom));
 		setZValue(zValue() + 1.0);

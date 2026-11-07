@@ -416,6 +416,10 @@
 <context>
     <name>GUI</name>
     <message>
+        <source>Show direction arrows</source>
+        <translation>Richtungspfeile anzeigen</translation>
+    </message>
+    <message>
         <source>Slider follows the mouse</source>
         <translation>Schieber folgt der Maus</translation>
     </message>

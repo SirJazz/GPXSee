@@ -267,6 +267,7 @@ private:
 #endif // !Q_OS_MACOS && !Q_OS_ANDROID
 	QAction *_pathsAction;
 	QAction *_showFileListAction;
+	QAction *_directionArrowsAction;
 	QAction *_aboutAction;
 	QAction *_printFileAction;
 	QAction *_exportPDFFileAction;

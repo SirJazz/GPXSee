@@ -1380,6 +1380,16 @@ void MapView::selectLayer(int layer)
 	reloadMap();
 }
 
+void MapView::showDirectionArrows(bool show)
+{
+	PathItem::showDirectionArrows(show);
+
+	for (int i = 0; i < _tracks.size(); i++)
+		_tracks.at(i)->update();
+	for (int i = 0; i < _routes.size(); i++)
+		_routes.at(i)->update();
+}
+
 void MapView::useStyles(bool use)
 {
 	GraphicsItem::useStyle(use);

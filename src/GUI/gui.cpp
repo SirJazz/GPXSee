@@ -541,6 +541,11 @@ void GUI::createActions()
 	  &MapView::useStyles);
 	connect(_useStylesAction, &QAction::triggered, _fileList,
 	  &FileListDock::refreshColors);
+	_directionArrowsAction = new QAction(tr("Show direction arrows"), this);
+	_directionArrowsAction->setMenuRole(QAction::NoRole);
+	_directionArrowsAction->setCheckable(true);
+	connect(_directionArrowsAction, &QAction::triggered, _mapView,
+	  &MapView::showDirectionArrows);
 
 	// DEM actions
 	_downloadDataDEMAction = new QAction(tr("Download data DEM"), this);
@@ -853,6 +858,7 @@ void GUI::createMenus()
 	markerMenu->addAction(_showVideosAction);
 	dataMenu->addSeparator();
 	dataMenu->addAction(_useStylesAction);
+	dataMenu->addAction(_directionArrowsAction);
 	dataMenu->addSeparator();
 	dataMenu->addAction(_showTracksAction);
 	dataMenu->addAction(_showRoutesAction);
@@ -2943,6 +2949,7 @@ void GUI::writeSettings()
 	  || _showMarkerCoordinatesAction->isChecked());
 	WRITE(markerInfo, mi);
 	WRITE(useStyles, _useStylesAction->isChecked());
+	WRITE(directionArrows, _directionArrowsAction->isChecked());
 	WRITE(videos, _showVideosAction->isChecked());
 	settings.endGroup();
 
@@ -3238,6 +3245,10 @@ void GUI::readSettings(QString &activeMap, QStringList &disabledPOIs,
 	if (READ(useStyles).toBool()) {
 		_useStylesAction->setChecked(true);
 		_mapView->useStyles(true);
+	}
+	if (READ(directionArrows).toBool()) {
+		_directionArrowsAction->setChecked(true);
+		_mapView->showDirectionArrows(true);
 	}
 	if (READ(positionMarkers).toBool()) {
 		MarkerInfoItem::Type mt = (MarkerInfoItem::Type)READ(markerInfo).toInt();

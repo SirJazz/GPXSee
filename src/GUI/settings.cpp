@@ -171,6 +171,7 @@ SETTING(legend,              "legend",                 false                  );
 SETTING(positionMarkers,     "positionMarkers",        true                   );
 SETTING(markerInfo,          "markerInfo",             MarkerInfoItem::None   );
 SETTING(useStyles,           "styles",                 true                   );
+SETTING(directionArrows,     "directionArrows",        false                  );
 SETTING(videos,              "videos",                 true                   );
 
 /* DEM */
