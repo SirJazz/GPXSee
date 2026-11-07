@@ -390,8 +390,8 @@ TrackDialog::TrackDialog(const Track &track, const QString &file,
 	layout->addWidget(_points, 1);
 	layout->addLayout(bottom);
 
-	connect(_color, &QComboBox::currentIndexChanged, this,
-	  &TrackDialog::colorChanged);
+	connect(_color, QOverload<int>::of(&QComboBox::currentIndexChanged),
+	  this, &TrackDialog::colorChanged);
 	connect(_saveButton, &QPushButton::clicked, this, &TrackDialog::saveColor);
 	connect(_points->selectionModel(), &QItemSelectionModel::currentRowChanged,
 	  this, &TrackDialog::rowChanged);
