@@ -43,6 +43,8 @@ public:
 	void useAntiAliasing(bool use);
 
 	void setSliderPosition(qreal pos);
+
+	static void setSliderFollowsMouse(bool follow) {_followMouse = follow;}
 	void setSliderColor(const QColor &color);
 
 	qreal sliderPosition() const {return _sliderPos;}
@@ -126,6 +128,8 @@ private:
 
 	int _angleDelta;
 	int _dragStart;
+
+	static bool _followMouse;
 };
 
 #endif // GRAPHVIEW_H

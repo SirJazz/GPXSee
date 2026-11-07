@@ -604,6 +604,12 @@ void GUI::createActions()
 	_showGraphSliderInfoAction->setCheckable(true);
 	connect(_showGraphSliderInfoAction, &QAction::triggered, this,
 	  &GUI::showGraphSliderInfo);
+	_sliderFollowsMouseAction = new QAction(tr("Slider follows the mouse"),
+	  this);
+	_sliderFollowsMouseAction->setMenuRole(QAction::NoRole);
+	_sliderFollowsMouseAction->setCheckable(true);
+	connect(_sliderFollowsMouseAction, &QAction::triggered, this,
+	  [](bool follow) {GraphView::setSliderFollowsMouse(follow);});
 #ifdef Q_OS_ANDROID
 	_showGraphTabsAction = new QAction(tr("Show tabs"), this);
 	_showGraphTabsAction->setMenuRole(QAction::NoRole);
@@ -819,6 +825,7 @@ void GUI::createMenus()
 	graphMenu->addSeparator();
 	graphMenu->addAction(_showGraphGridAction);
 	graphMenu->addAction(_showGraphSliderInfoAction);
+	graphMenu->addAction(_sliderFollowsMouseAction);
 #ifdef Q_OS_ANDROID
 	graphMenu->addAction(_showGraphTabsAction);
 #endif // Q_OS_ANDROID
@@ -2890,6 +2897,7 @@ void GUI::writeSettings()
 	WRITE(graphType, _timeGraphAction->isChecked() ? Time : Distance);
 	WRITE(showGrid, _showGraphGridAction->isChecked());
 	WRITE(sliderInfo, _showGraphSliderInfoAction->isChecked());
+	WRITE(sliderFollowsMouse, _sliderFollowsMouseAction->isChecked());
 #ifdef Q_OS_ANDROID
 	WRITE(showGraphTabs, _showGraphTabsAction->isChecked());
 #endif // Q_OS_ANDROID
@@ -3148,6 +3156,9 @@ void GUI::readSettings(QString &activeMap, QStringList &disabledPOIs,
 		_showGraphSliderInfoAction->setChecked(true);
 	else
 		showGraphSliderInfo(false);
+
+	_sliderFollowsMouseAction->setChecked(READ(sliderFollowsMouse).toBool());
+	GraphView::setSliderFollowsMouse(_sliderFollowsMouseAction->isChecked());
 
 #ifdef Q_OS_ANDROID
 	if (READ(showGraphTabs).toBool())

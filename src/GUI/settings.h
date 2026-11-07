@@ -99,6 +99,7 @@ public:
 	static const Setting graphType;
 	static const Setting showGrid;
 	static const Setting sliderInfo;
+	static const Setting sliderFollowsMouse;
 #ifdef Q_OS_ANDROID
 	static const Setting showGraphTabs;
 #endif // Q_OS_ANDROID

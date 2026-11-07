@@ -146,6 +146,7 @@ SETTING(showGraphs,          "show",                   true                   );
 SETTING(graphType,           "type",                   Distance               );
 SETTING(showGrid,            "grid",                   true                   );
 SETTING(sliderInfo,          "sliderInfo",             true                   );
+SETTING(sliderFollowsMouse,  "sliderFollowsMouse",     true                   );
 #ifdef Q_OS_ANDROID
 SETTING(showGraphTabs,       "tabs",                   true                   );
 #endif // Q_OS_ANDROID

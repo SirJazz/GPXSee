@@ -416,6 +416,10 @@
 <context>
     <name>GUI</name>
     <message>
+        <source>Slider follows the mouse</source>
+        <translation>Schieber folgt der Maus</translation>
+    </message>
+    <message>
         <source>Show file list</source>
         <translation>Dateiliste anzeigen</translation>
     </message>

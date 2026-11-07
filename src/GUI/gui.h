@@ -295,6 +295,7 @@ private:
 	QAction *_showGraphsAction;
 	QAction *_showGraphGridAction;
 	QAction *_showGraphSliderInfoAction;
+	QAction *_sliderFollowsMouseAction;
 	QAction *_distanceGraphAction;
 	QAction *_timeGraphAction;
 #ifdef Q_OS_ANDROID

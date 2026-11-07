@@ -34,6 +34,8 @@ static inline QPoint POS(QMouseEvent *e)
 #endif // QT 6
 }
 
+bool GraphView::_followMouse = true;
+
 GraphView::GraphView(QWidget *parent)
 	: QGraphicsView(parent)
 {
@@ -41,6 +43,7 @@ GraphView::GraphView(QWidget *parent)
 
 	_scene = new GraphicsScene(this);
 	setScene(_scene);
+	setMouseTracking(true);
 
 	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	setRenderHint(QPainter::Antialiasing, true);
@@ -372,7 +375,8 @@ void GraphView::mouseMoveEvent(QMouseEvent *e)
 		int x = POS(e).x();
 		sb->setSliderPosition(sb->sliderPosition() - (x - _dragStart));
 		_dragStart = x;
-	}
+	} else if (_followMouse && !_graphs.isEmpty())
+		newSliderPosition(mapToScene(POS(e)));
 
 	QGraphicsView::mouseMoveEvent(e);
 }
