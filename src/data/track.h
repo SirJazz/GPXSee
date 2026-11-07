@@ -38,6 +38,7 @@ public:
 	const LineStyle &style() const {return _data.style();}
 	const QString &file() const {return _data.file();}
 	bool isVideo() const {return _data.isVideo();}
+	const TrackData &data() const {return _data;}
 
 	bool isValid() const;
 

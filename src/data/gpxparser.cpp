@@ -1,4 +1,5 @@
 #include "address.h"
+#include "common/garmincolors.h"
 #include "gpxparser.h"
 
 
@@ -236,7 +237,7 @@ void GPXParser::routeExtension(RouteData &route)
 {
 	while (_reader.readNextStartElement()) {
 		if (_reader.name() == QLatin1String("DisplayColor"))
-			route.setStyle(LineStyle(QColor(_reader.readElementText())));
+			route.setStyle(LineStyle(GarminColors::color(_reader.readElementText())));
 		else
 			_reader.skipCurrentElement();
 	}
@@ -297,7 +298,7 @@ void GPXParser::trackExtension(TrackData &track)
 {
 	while (_reader.readNextStartElement()) {
 		if (_reader.name() == QLatin1String("DisplayColor"))
-			track.setStyle(LineStyle(QColor(_reader.readElementText())));
+			track.setStyle(LineStyle(GarminColors::color(_reader.readElementText())));
 		else
 			_reader.skipCurrentElement();
 	}

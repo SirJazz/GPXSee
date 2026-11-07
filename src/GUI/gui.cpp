@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QSplitter>
+#include <QDockWidget>
 #include <QVBoxLayout>
 #include <QMenuBar>
 #include <QStatusBar>
@@ -64,6 +65,8 @@
 #include "poiaction.h"
 #include "macos.h"
 #include "imagebutton.h"
+#include "trackdialog.h"
+#include "pathitem.h"
 #include "gui.h"
 
 #define MAX_RECENT_FILES      10
@@ -83,6 +86,7 @@ GUI::GUI(const QString &lang)
 	connect(_dem, &DEMLoader::finished, this, &GUI::demLoaded);
 
 	createMapView();
+	_fileList = new FileListDock(this);
 	createGraphTabs();
 	createStatusBar();
 	createActions();
@@ -105,6 +109,13 @@ GUI::GUI(const QString &lang)
 	_splitter->setStretchFactor(1, 1);
 
 	setCentralWidget(_splitter);
+
+	addDockWidget(Qt::LeftDockWidgetArea, _fileList);
+	resizeDocks(QList<QDockWidget*>() << _fileList, QList<int>() << 320,
+	  Qt::Horizontal);
+	connect(_fileList, &FileListDock::pathActivated, this, &GUI::activatePath);
+	connect(_fileList, &FileListDock::propertiesRequested, this,
+	  &GUI::showPathProperties);
 
 	setWindowIcon(QIcon(APP_ICON));
 	setWindowTitle(APP_NAME);
@@ -528,6 +539,8 @@ void GUI::createActions()
 	_useStylesAction->setCheckable(true);
 	connect(_useStylesAction, &QAction::triggered, _mapView,
 	  &MapView::useStyles);
+	connect(_useStylesAction, &QAction::triggered, _fileList,
+	  &FileListDock::refreshColors);
 
 	// DEM actions
 	_downloadDataDEMAction = new QAction(tr("Download data DEM"), this);
@@ -900,6 +913,10 @@ void GUI::createMenus()
 	settingsMenu->addSeparator();
 #ifndef Q_OS_ANDROID
 	settingsMenu->addAction(_showToolbarsAction);
+	_showFileListAction = _fileList->toggleViewAction();
+	_showFileListAction->setText(tr("Show file list"));
+	_showFileListAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
+	settingsMenu->addAction(_showFileListAction);
 	settingsMenu->addAction(_fullscreenAction);
 	settingsMenu->addSeparator();
 #endif // Q_OS_ANDROID
@@ -1296,7 +1313,7 @@ bool GUI::loadURL(const QUrl &url, int &showError)
 	Data data(url);
 
 	if (data.isValid()) {
-		loadData(data);
+		loadData(data, url.toString());
 		return true;
 	} else {
 		if (showError) {
@@ -1326,7 +1343,7 @@ bool GUI::loadFile(const QString &fileName, bool tryUnknown, int &showError)
 	Data data(fileName, tryUnknown);
 
 	if (data.isValid()) {
-		loadData(data);
+		loadData(data, fileName);
 		return true;
 	} else {
 		updateNavigationActions();
@@ -1359,7 +1376,7 @@ bool GUI::loadFile(const QString &fileName, bool tryUnknown, int &showError)
 	}
 }
 
-void GUI::loadData(const Data &data)
+void GUI::loadData(const Data &data, const QString &source)
 {
 	QList<QList<GraphItem*> > graphs;
 	QList<PathItem*> paths;
@@ -1401,6 +1418,7 @@ void GUI::loadData(const Data &data)
 	if (updateGraphTabs())
 		_splitter->refresh();
 	paths = _mapView->loadData(data);
+	_fileList->addData(data, source, paths);
 
 	GraphTab *gt = static_cast<GraphTab*>(_graphTabWidget->currentWidget());
 
@@ -1783,8 +1801,12 @@ void GUI::reloadFiles()
 	_dateRange = DateTimeRange(QDateTime(), QDateTime());
 	_pathName = QString();
 
+	QHash<QString, bool> visibility(_fileList->visibilityState());
+	QString selected(_fileList->selectedKey());
+
 	for (int i = 0; i < _tabs.count(); i++)
 		_tabs.at(i)->clear();
+	_fileList->clear();
 	_mapView->clear();
 
 	int showError = 2;
@@ -1794,6 +1816,8 @@ void GUI::reloadFiles()
 			i--;
 		}
 	}
+	_fileList->restoreVisibilityState(visibility);
+	_fileList->selectKey(selected);
 
 	updateStatusBarInfo();
 	updateWindowTitle();
@@ -1824,6 +1848,7 @@ void GUI::closeFiles()
 		_tabs.at(i)->clear();
 	_lastTab = 0;
 
+	_fileList->clear();
 	_mapView->clear();
 	_mapView->showExtendedInfo(false);
 
@@ -1901,6 +1926,7 @@ void GUI::showFullscreen(bool show)
 void GUI::showTracks(bool show)
 {
 	_mapView->showTracks(show);
+	_fileList->setShowTracks(show);
 
 	for (int i = 0; i < _tabs.size(); i++)
 		_tabs.at(i)->showTracks(show);
@@ -1913,6 +1939,7 @@ void GUI::showTracks(bool show)
 void GUI::showRoutes(bool show)
 {
 	_mapView->showRoutes(show);
+	_fileList->setShowRoutes(show);
 
 	for (int i = 0; i < _tabs.size(); i++)
 		_tabs.at(i)->showRoutes(show);
@@ -3747,3 +3774,42 @@ void GUI::showClose()
 	_closeButton->setVisible(true);
 }
 #endif // Q_OS_ANDROID
+
+CoordinatesFormat GUI::coordinatesFormat() const
+{
+	return _dmsAction->isChecked() ? DMS : _degreesMinutesAction->isChecked()
+	  ? DegreesMinutes : DecimalDegrees;
+}
+
+void GUI::activatePath(PathItem *item)
+{
+	_mapView->fitPath(item);
+}
+
+void GUI::centerMapOn(const Coordinates &c)
+{
+	_mapView->centerOnCoordinates(c);
+}
+
+void GUI::showPathProperties(const FileListDock::Entry *entry)
+{
+	if (!entry->isTrack || !entry->track) {
+		statusBar()->showMessage(tr("Properties are only available for tracks"),
+		  5000);
+		return;
+	}
+
+	TrackDialog *dialog = new TrackDialog(*entry->track, entry->file,
+	  entry->occurrence, _map, units(), coordinatesFormat(),
+	  _options.timeZone.zone(), this);
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+	connect(dialog, &TrackDialog::pointSelected, this, &GUI::centerMapOn);
+	connect(dialog, &QDialog::finished, this, [this, dialog]() {
+		if (!dialog->saved())
+			return;
+		if (!_useStylesAction->isChecked())
+			_useStylesAction->trigger();
+		reloadFiles();
+	});
+	dialog->show();
+}

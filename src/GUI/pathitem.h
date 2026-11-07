@@ -52,6 +52,7 @@ public:
 	void showTicks(bool show);
 	void showPoints(bool show);
 	void showVideo(bool show);
+	void setPathVisible(bool visible);
 
 	void setMarkerPosition(qreal pos);
 

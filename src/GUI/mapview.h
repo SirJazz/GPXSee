@@ -69,6 +69,8 @@ public:
 	void plot(QPainter *painter, const QRectF &target, qreal scale, Flags flags);
 
 	void clear();
+	void fitPath(const PathItem *item);
+	void centerOnCoordinates(const Coordinates &c);
 
 	void setUnits(Units units);
 	void setMarkerColor(const QColor &color);

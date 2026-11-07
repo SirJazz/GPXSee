@@ -362,6 +362,30 @@ void MapView::loadDEMs(const QList<Area> &dems)
 	centerOn(contentCenter());
 }
 
+void MapView::fitPath(const PathItem *item)
+{
+	if (!item)
+		return;
+	RectC br(item->path().boundingRect());
+	if (br.isNull())
+		return;
+
+	int zoom = _map->zoom();
+	if (_map->zoomFit(viewport()->size() - QSize(2*MARGIN, 2*MARGIN), br)
+	  != zoom)
+		rescale();
+	else
+		updatePOIVisibility();
+
+	centerOn(_map->ll2xy(br.center()));
+}
+
+void MapView::centerOnCoordinates(const Coordinates &c)
+{
+	if (c.isValid())
+		centerOn(_map->ll2xy(c));
+}
+
 int MapView::fitMapZoom() const
 {
 	RectC br = _tr | _rr | _wr | _ar;

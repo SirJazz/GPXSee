@@ -14,6 +14,7 @@
 #include "pdfexportdialog.h"
 #include "pngexportdialog.h"
 #include "optionsdialog.h"
+#include "filelistdock.h"
 
 class QMenu;
 class QToolBar;
@@ -36,6 +37,8 @@ class POIAction;
 class Data;
 class DEMLoader;
 class ImageButton;
+class PathItem;
+class Coordinates;
 
 class GUI : public QMainWindow
 {
@@ -175,7 +178,11 @@ private:
 	bool openPOIFile(const QString &fileName);
 	bool loadFile(const QString &fileName, bool tryUnknown, int &showError);
 	bool loadURL(const QUrl &url, int &showError);
-	void loadData(const Data &data);
+	void loadData(const Data &data, const QString &source);
+	CoordinatesFormat coordinatesFormat() const;
+	void activatePath(PathItem *item);
+	void showPathProperties(const FileListDock::Entry *entry);
+	void centerMapOn(const Coordinates &c);
 	bool loadMapNode(const TreeNode<Map*> &node, MapAction *&action,
 	  const QList<QAction*> &existingActions, int &showError);
 	void loadMapDirNode(const TreeNode<Map*> &node, QList<MapAction*> &actions,
@@ -259,6 +266,7 @@ private:
 	QAction *_exitAction;
 #endif // !Q_OS_MACOS && !Q_OS_ANDROID
 	QAction *_pathsAction;
+	QAction *_showFileListAction;
 	QAction *_aboutAction;
 	QAction *_printFileAction;
 	QAction *_exportPDFFileAction;
@@ -355,6 +363,7 @@ private:
 	DEMLoader *_dem;
 
 	FileBrowser *_browser;
+	FileListDock *_fileList;
 	QList<QString> _files;
 
 	int _trackCount, _routeCount, _areaCount, _waypointCount;

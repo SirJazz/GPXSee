@@ -416,6 +416,14 @@
 <context>
     <name>GUI</name>
     <message>
+        <source>Show file list</source>
+        <translation>Dateiliste anzeigen</translation>
+    </message>
+    <message>
+        <source>Properties are only available for tracks</source>
+        <translation>Eigenschaften gibt es nur für Tracks</translation>
+    </message>
+    <message>
         <location filename="../src/GUI/gui.cpp" line="1110"/>
         <location filename="../src/GUI/gui.cpp" line="1128"/>
         <source>Map directory:</source>
@@ -2748,6 +2756,263 @@
         <location filename="../src/GUI/waypointitem.cpp" line="71"/>
         <source>Links</source>
         <translation>Links</translation>
+    </message>
+</context>
+<context>
+    <name>FileListDock</name>
+    <message>
+        <source>Files</source>
+        <translation>Dateien</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation>Distanz</translation>
+    </message>
+    <message>
+        <source>Filter</source>
+        <translation>Filter</translation>
+    </message>
+    <message>
+        <source>Show all</source>
+        <translation>Alle anzeigen</translation>
+    </message>
+    <message>
+        <source>Hide all</source>
+        <translation>Alle ausblenden</translation>
+    </message>
+    <message>
+        <source>Properties...</source>
+        <translation>Eigenschaften...</translation>
+    </message>
+    <message>
+        <source>Show only this</source>
+        <translation>Nur diesen anzeigen</translation>
+    </message>
+</context>
+<context>
+    <name>TrackDialog</name>
+    <message>
+        <source>Distance</source>
+        <translation>Distanz</translation>
+    </message>
+    <message>
+        <source>Index</source>
+        <translation>Index</translation>
+    </message>
+    <message>
+        <source>Elevation</source>
+        <translation>Höhe</translation>
+    </message>
+    <message>
+        <source>Leg distance</source>
+        <translation>Teilstrecke</translation>
+    </message>
+    <message>
+        <source>Leg time</source>
+        <translation>Fahrzeit</translation>
+    </message>
+    <message>
+        <source>Leg speed</source>
+        <translation>Geschw.</translation>
+    </message>
+    <message>
+        <source>Course</source>
+        <translation>Richtung</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation>Zeit</translation>
+    </message>
+    <message>
+        <source>Position</source>
+        <translation>Position</translation>
+    </message>
+    <message>
+        <source>mi/h</source>
+        <translation>mi/h</translation>
+    </message>
+    <message>
+        <source>kn</source>
+        <translation>kn</translation>
+    </message>
+    <message>
+        <source>km/h</source>
+        <translation>km/h</translation>
+    </message>
+    <message>
+        <source>Garmin display color (gpxx:DisplayColor)</source>
+        <translation>Garmin-Anzeigefarbe (gpxx:DisplayColor)</translation>
+    </message>
+    <message>
+        <source>Save color to file</source>
+        <translation>Farbe in Datei speichern</translation>
+    </message>
+    <message>
+        <source>Colors can only be saved to GPX files.</source>
+        <translation>Farben lassen sich nur in GPX-Dateien speichern.</translation>
+    </message>
+    <message>
+        <source>Points</source>
+        <translation>Punkte</translation>
+    </message>
+    <message>
+        <source>Total time</source>
+        <translation>Verstrichene Zeit</translation>
+    </message>
+    <message>
+        <source>Moving time</source>
+        <translation>Zeit in Fahrt</translation>
+    </message>
+    <message>
+        <source>Pause time</source>
+        <translation>Pausenzeit</translation>
+    </message>
+    <message>
+        <source>Average</source>
+        <translation>Durchschnitt</translation>
+    </message>
+    <message>
+        <source>Moving average</source>
+        <translation>Durchschnitt in Fahrt</translation>
+    </message>
+    <message>
+        <source>Maximum</source>
+        <translation>Max.</translation>
+    </message>
+    <message>
+        <source>Minimum</source>
+        <translation>Min.</translation>
+    </message>
+    <message>
+        <source>Ascent</source>
+        <translation>Anstieg</translation>
+    </message>
+    <message>
+        <source>Descent</source>
+        <translation>Abstieg</translation>
+    </message>
+    <message>
+        <source>Overview</source>
+        <translation>Übersicht</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Geschwindigkeit</translation>
+    </message>
+    <message>
+        <source>Center map on selected point</source>
+        <translation>Karte auf gewählten Punkt zentrieren</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Schließen</translation>
+    </message>
+    <message>
+        <source>Error saving the color:</source>
+        <translation>Fehler beim Speichern der Farbe:</translation>
+    </message>
+    <message>
+        <source>Color %1 saved to %2 (backup: %3)</source>
+        <translation>Farbe %1 in %2 gespeichert (Sicherung: %3)</translation>
+    </message>
+    <message>
+        <source>Black</source>
+        <translation>Schwarz</translation>
+    </message>
+    <message>
+        <source>Dark red</source>
+        <translation>Dunkelrot</translation>
+    </message>
+    <message>
+        <source>Dark green</source>
+        <translation>Dunkelgrün</translation>
+    </message>
+    <message>
+        <source>Dark yellow</source>
+        <translation>Dunkelgelb</translation>
+    </message>
+    <message>
+        <source>Dark blue</source>
+        <translation>Dunkelblau</translation>
+    </message>
+    <message>
+        <source>Dark magenta</source>
+        <translation>Dunkelmagenta</translation>
+    </message>
+    <message>
+        <source>Dark cyan</source>
+        <translation>Dunkelcyan</translation>
+    </message>
+    <message>
+        <source>Light gray</source>
+        <translation>Hellgrau</translation>
+    </message>
+    <message>
+        <source>Dark gray</source>
+        <translation>Dunkelgrau</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>Rot</translation>
+    </message>
+    <message>
+        <source>Green</source>
+        <translation>Grün</translation>
+    </message>
+    <message>
+        <source>Yellow</source>
+        <translation>Gelb</translation>
+    </message>
+    <message>
+        <source>Blue</source>
+        <translation>Blau</translation>
+    </message>
+    <message>
+        <source>Magenta</source>
+        <translation>Magenta</translation>
+    </message>
+    <message>
+        <source>Cyan</source>
+        <translation>Cyan</translation>
+    </message>
+    <message>
+        <source>White</source>
+        <translation>Weiß</translation>
+    </message>
+    <message>
+        <source>Transparent</source>
+        <translation>Transparent</translation>
+    </message>
+</context>
+<context>
+    <name>GPXColorWriter</name>
+    <message>
+        <source>Unsupported file encoding: %1</source>
+        <translation>Nicht unterstützte Dateikodierung: %1</translation>
+    </message>
+    <message>
+        <source>Invalid color: %1</source>
+        <translation>Ungültige Farbe: %1</translation>
+    </message>
+    <message>
+        <source>Not a GPX file</source>
+        <translation>Keine GPX-Datei</translation>
+    </message>
+    <message>
+        <source>Track not found: %1</source>
+        <translation>Track nicht gefunden: %1</translation>
+    </message>
+    <message>
+        <source>Can not remove the old backup file: %1</source>
+        <translation>Alte Sicherungsdatei lässt sich nicht löschen: %1</translation>
+    </message>
+    <message>
+        <source>Can not create the backup file: %1</source>
+        <translation>Sicherungsdatei lässt sich nicht anlegen: %1</translation>
     </message>
 </context>
 </TS>

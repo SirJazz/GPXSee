@@ -535,6 +535,20 @@ void PathItem::showTicks(bool show)
 	updateTicks();
 }
 
+void PathItem::setPathVisible(bool visible)
+{
+	setVisible(visible);
+
+	for (int i = 0; i < _graphs.size(); i++) {
+		GraphItem *graph = _graphs.at(i);
+		if (!graph)
+			continue;
+		graph->setVisible(visible);
+		if (graph->secondaryGraph())
+			graph->secondaryGraph()->setVisible(visible);
+	}
+}
+
 void PathItem::addGraph(GraphItem *graph)
 {
 	_graphs.append(graph);
